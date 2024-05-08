@@ -60,7 +60,15 @@ func handleGlobalCommands(args []string, rl *readline.Instance, currentContext *
 	switch args[0] {
 	case "stats":
 		handleStats()
-	case "record", "cache", "dns", "server":
+	case "record", "cache", "dns":
+		handleContextCommand(args[0], args, rl, currentContext)
+	case "server":
+		if len(args) > 1 {
+			switch args[1] {
+			case "start", "stop", "status", "configure":
+				handleContextCommand(args[1], args, rl, currentContext)
+			}
+		}
 		handleContextCommand(args[0], args, rl, currentContext)
 	case "help", "h", "?", "ls", "l":
 		mainHelp()
@@ -106,6 +114,14 @@ func handleSubcommand(command string, args []string, context string) {
 		handleDNS(args, context)
 	case "server":
 		handleServer(args, context)
+	case "start":
+		handleServerStart(args, context)
+	case "stop":
+		handleServerStop(args, context)
+	case "status":
+		handleServerStatus(args, context)
+	case "configure":
+		handleServerConfigure(args, context)
 	default:
 		fmt.Println("Unknown subcommand:", args[0])
 	}
